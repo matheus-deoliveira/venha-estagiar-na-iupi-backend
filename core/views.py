@@ -1,3 +1,41 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+
+from core.models import Transaction
+from core.serializers import TransactionSerializer
 
 # Create your views here.
+
+class TransactionViewSet(viewsets.ModelViewSet):
+    """
+    O ViewSet seria responsável pelo CRUD, ao invés
+    de termos que escrever 5 funções diferentes na mão,
+    ViewSet permite a manipulação de todas essas funções
+    GET, POST, PUT, PATCH, DELETE
+    """
+
+    serializer_class = TransactionSerializer
+
+    # Pesquisando é completamente normal esse erro, então
+    # somente ignora ele e segue o desenvolvimento
+    def get_queryset(self): #type: ignore
+        """
+        Sobrescreve a busca padrão permitindo filtros via URL.
+        Ex: /transactions/?type=income&description=salario
+        """
+
+        # Pega todas as transações
+        queryset = Transaction.objects.all()
+
+        # Preciso pegar os parâmetros que vieram na URL
+        params = getattr(self.request, 'query_params', self.request.GET)
+        description = params.get('description')
+        transaction_type = params.get('type')
+
+        if description:
+            # 'description__icontains' faz o SQL: LIKE '%valor%'
+            queryset = queryset.filter(description__icontains=description)
+
+        if transaction_type:
+            queryset = queryset.filter(type=transaction_type)
+
+        return queryset

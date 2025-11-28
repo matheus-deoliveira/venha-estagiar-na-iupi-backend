@@ -12,10 +12,10 @@ class TransactionSerializer(serializers.ModelSerializer):
         # Campos que serão expostos no JSON
         fields = ['id', 'description', 'amount', 'type', 'date']
 
-        # Validação do amount
-        # Pelo que estive estudando somente ter um "validate_nomedavariável"
-        # já é suficiente para o django entender que é uma validação do campo
-        def validade_amount(self, value):
+    # Validação do amount
+    # Pelo que estive estudando somente ter um "validate_nomedavariável"
+    # já é suficiente para o django entender que é uma validação do campo
+    def validade_amount(self, value):
             if value <= 0:
                 raise serializers.ValidationError("O valor da transação deve ser positivo")
             return value
