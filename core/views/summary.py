@@ -1,0 +1,15 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.db.models import Sum
+from core.models import Transaction
+
+class TransactionSummaryView(APIView):
+    def get(self, request):
+        income = Transaction.objects.filter(type='income').aggregate(Sum('amount'))['amount__sum'] or 0
+        expense = Transaction.objects.filter(type='expense').aggregate(Sum('amount'))['amount__sum'] or 0
+        
+        return Response({
+            "total_income": income,
+            "total_expense": expense,
+            "net_balance": income - expense
+        })

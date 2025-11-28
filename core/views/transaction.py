@@ -1,9 +1,7 @@
 from rest_framework import viewsets
 
-from core.models.transaction import Transaction
 from core.serializers import TransactionSerializer
-
-# Create your views here.
+from core.models.transaction import Transaction
 
 class TransactionViewSet(viewsets.ModelViewSet):
     """
