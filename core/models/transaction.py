@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 class Transaction(models.Model):
     # Definimos as opções fixas para o campo 'type'
     # O primeiro valor é o que vai no banco ('income'), o segundo é o que aparece para humanos ('Entrada')
