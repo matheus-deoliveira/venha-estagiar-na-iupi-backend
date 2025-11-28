@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Transaction(models.Model):
     # Definimos as opções fixas para o campo 'type'
@@ -7,6 +8,8 @@ class Transaction(models.Model):
         ('income', 'Entrada'),
         ('expense', 'Saída'),
     )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transaction')
 
     # CharField: para textos curtos
     description = models.CharField(max_length=255)

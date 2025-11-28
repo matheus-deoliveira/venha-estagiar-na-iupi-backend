@@ -17,10 +17,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # O user vai acessar: http://localhost:8000/api/transactions/
     # E quem vai gerenciar os endpoints da api é o core.urls
     path('api/', include('core.urls')),
+
+    # Rotas de Autenticação (Login)
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

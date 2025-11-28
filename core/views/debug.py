@@ -4,6 +4,7 @@ from datetime import date, timedelta
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from ..models import Transaction
 
 class PopulateDBView(APIView):
@@ -11,9 +12,14 @@ class PopulateDBView(APIView):
     View utilitária para preencher o banco de dados com dados de teste.
     Gera 20 entradas e 20 saídas aleatórias.
     """
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         incomes = []
         expenses = []
+
+        # O usuário que enviou a requisição (extraído do Token)
+        current_user = request.user
 
         # Descrições para sortear
         desc_income = ['Salário', 'Freelance', 'Venda de Item', 'Reembolso', 'Presente', 'Dividendo']
@@ -29,7 +35,8 @@ class PopulateDBView(APIView):
                 description=f"{random.choice(desc_income)} (Teste)",
                 amount=random.randint(100, 5000),
                 type='income',
-                date=transaction_date
+                date=transaction_date,
+                user=current_user,
             )
             incomes.append(t)
 
@@ -42,7 +49,8 @@ class PopulateDBView(APIView):
                 description=f"{random.choice(desc_expense)} (Teste)",
                 amount=random.randint(10, 500), # Saídas menores
                 type='expense',
-                date=transaction_date
+                date=transaction_date,
+                user=current_user,
             )
             expenses.append(t)
 

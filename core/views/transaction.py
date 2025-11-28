@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from core.serializers import TransactionSerializer
 from core.models.transaction import Transaction
@@ -12,6 +13,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     """
 
     serializer_class = TransactionSerializer
+    permission_classes = [IsAuthenticated]
 
     # Pesquisando é completamente normal esse erro, então
     # somente ignora ele e segue o desenvolvimento
@@ -22,7 +24,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         """
 
         # Pega todas as transações
-        queryset = Transaction.objects.all()
+        queryset = Transaction.objects.filter(user=self.request.user).order_by('-date')
 
         # Preciso pegar os parâmetros que vieram na URL
         params = getattr(self.request, 'query_params', self.request.GET)
@@ -37,3 +39,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(type=transaction_type)
 
         return queryset
+    
+    # Quando criar, injeta o usuário logado automaticamente
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
