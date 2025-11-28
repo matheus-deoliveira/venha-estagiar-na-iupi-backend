@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from core.views import TransactionViewSet
+from core.views.debug import PopulateDBView
 from core.views.summary import TransactionSummaryView
 
 # O Router cria as rotas automaticamente,
@@ -15,6 +16,10 @@ router = DefaultRouter()
 router.register(r'transactions', TransactionViewSet, basename='transaction')
 
 urlpatterns = [
-    path('', include(router.urls)),
     path('summary/', TransactionSummaryView.as_view(), name='summary'),
+    
+    # Rota para gerar dados (pode remover depois se for pra produção)
+    path('populate/', PopulateDBView.as_view(), name='populate-db'),
+
+    path('', include(router.urls)),
 ]

@@ -15,7 +15,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     # Validação do amount
     # Pelo que estive estudando somente ter um "validate_nomedavariável"
     # já é suficiente para o django entender que é uma validação do campo
-    def validade_amount(self, value):
+    def validate_amount(self, value):
             if value <= 0:
                 raise serializers.ValidationError("O valor da transação deve ser positivo")
             return value
