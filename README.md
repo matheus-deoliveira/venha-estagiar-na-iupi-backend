@@ -72,7 +72,7 @@ A API estará disponível em: `http://127.0.0.1:8000/api/`
 
 ## Como usar (Autenticação)
 
-⚠️ **Esta API é protegida.** Para acessar qualquer rota, você precisa de um Token JWT.
+**Esta API é protegida.** Para acessar qualquer rota, você precisa de um Token JWT.
 
 1. **Obter Token (Login):**
     - Faça um POST em `/login/` com seu `username` e `password`.
