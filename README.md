@@ -31,7 +31,7 @@ Para garantir a escalabilidade e a manutenibilidade do código, optei por refato
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/matheus-deoliveira/venha-estagiar-na-iupi-backend](https://github.com/matheus-deoliveira/venha-estagiar-na-iupi-backend)
+    git clone https://github.com/matheus-deoliveira/venha-estagiar-na-iupi-backend
     cd venha-estagiar-na-iupi-backend
     ```
 
