@@ -1,10 +1,11 @@
 import json
 from django.urls import reverse
 from rest_framework import status
-from django.test import TestCase
+from rest_framework.test import APITestCase
+from django.contrib.auth.models import User
 from core.models import Transaction
 
-class TransactionAPITest(TestCase):
+class TransactionAPITest(APITestCase):
     
     def setUp(self):
         # Definimos as URLs usando 'reverse' para não fazer hardcode '/api/transactions/'
@@ -12,9 +13,15 @@ class TransactionAPITest(TestCase):
         self.list_url = reverse('transaction-list') 
         self.summary_url = reverse('summary')
 
+        # Cria usuário de teste
+        self.user = User.objects.create_user(username='apitest', password='123')
+
+        # Isso faz o DRF achar que estamos enviando o Token JWT válido
+        self.client.force_authenticate(user=self.user)
+
         # Criamos alguns dados iniciais para testes de leitura
-        self.t1 = Transaction.objects.create(description="Salário", amount=1000, type="income", date="2023-01-01")
-        self.t2 = Transaction.objects.create(description="Aluguel", amount=300, type="expense", date="2023-01-05")
+        self.t1 = Transaction.objects.create(description="Salário", amount=1000, type="income", date="2023-01-01", user=self.user)
+        self.t2 = Transaction.objects.create(description="Aluguel", amount=300, type="expense", date="2023-01-05", user=self.user)
 
     def test_get_all_transactions(self):
         """Deve retornar status 200 e a lista de transações"""
@@ -34,7 +41,7 @@ class TransactionAPITest(TestCase):
         }
         response = self.client.post(self.list_url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Transaction.objects.count(), 3) # Eram 2, agora deve ter 3
+        self.assertEqual(Transaction.objects.count(), 3)
 
     def test_create_transaction_negative_amount_fail(self):
         """Deve falhar (400) se tentar criar valor negativo"""

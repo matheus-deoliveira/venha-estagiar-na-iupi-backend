@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from core.models import Transaction
 
 class TransactionModelTest(TestCase):
@@ -7,11 +8,16 @@ class TransactionModelTest(TestCase):
         O método setUp roda antes de cada teste.
         Usamos para preparar o terreno (criar dados falsos).
         """
+
+        # Cria um usuário para ser o dono da transação
+        self.user = User.objects.create_user(username='modeltest', password='123')
+
         self.transaction = Transaction.objects.create(
             description="Teste Unitário",
             amount=100.50,
             type="income",
-            date="2023-01-01"
+            date="2023-01-01",
+            user=self.user
         )
 
     def test_transaction_creation(self):
